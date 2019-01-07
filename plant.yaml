@@ -1,0 +1,53 @@
+group:
+  odlingen:
+    name: odlingen
+    #view: yes
+    entities:
+    - switch.vattenpump
+    - switch.belysning
+    - switch.varme
+    - switch.ventilation
+    - binary_sensor.expriment_knapp
+plant:
+  tomater:
+    sensors:
+      moisture: sensor.vatten_larm
+      brightness: sensor.plantlampa
+      temperature: sensor.temperatur_vardagsru_116
+      battery: sensor.plantwatt
+switch:
+  - platform: mqtt
+    name: "Vattenpump"
+    state_topic: '/Monitor_Basement/water/state'
+    command_topic: '/Monitor_Basement/gpio/12'
+    payload_on: "1"
+    payload_off: "0"
+    state_on: "1"
+    state_off: "0"
+
+  - platform: mqtt
+    name: "Belysning"
+    state_topic: '/Monitor_Basement/lights/state'
+    command_topic: '/Monitor_Basement/gpio/14'
+    payload_on: "1"
+    payload_off: "0"
+    state_on: "1"
+    state_off: "0"
+
+  - platform: mqtt
+    name: "Värme"
+    state_topic: '/Monitor_Basement/heat/state'
+    command_topic: '/Monitor_Basement/gpio/13'
+    payload_on: "1"
+    payload_off: "0"
+    state_on: "1"
+    state_off: "0"
+
+  - platform: mqtt
+    name: "Ventilation"
+    state_topic: '/Monitor_Basement/ventilation/state'
+    command_topic: '/Monitor_Basement/gpio/15'
+    payload_on: "1"
+    payload_off: "0"
+    state_on: "1"
+    state_off: "0"
