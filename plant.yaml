@@ -8,13 +8,13 @@ group:
     - switch.varme
     - switch.ventilation
     - binary_sensor.expriment_knapp
-plant:
-  tomater:
-    sensors:
-      moisture: sensor.vatten_larm
-      brightness: sensor.plantlampa
-      temperature: sensor.temperatur_vardagsru_116
-      battery: sensor.plantwatt
+#plant:
+  #tomater:
+    #sensors:
+      #moisture: sensor.vatten_larm
+      #brightness: sensor.plantlampa
+      #temperature: sensor.temperatur_vardagsru_116
+      #battery: sensor.plantwatt
 switch:
   - platform: mqtt
     name: "Vattenpump"
