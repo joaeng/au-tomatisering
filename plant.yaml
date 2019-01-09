@@ -1,20 +1,21 @@
 group:
   odlingen:
     name: odlingen
-    #view: yes
+    view: yes
     entities:
     - switch.vattenpump
     - switch.belysning
     - switch.varme
     - switch.ventilation
-    - binary_sensor.expriment_knapp
-#plant:
-  #tomater:
-    #sensors:
-      #moisture: sensor.vatten_larm
-      #brightness: sensor.plantlampa
-      #temperature: sensor.temperatur_vardagsru_116
-      #battery: sensor.plantwatt
+    #- binary_sensor.expriment_knapp
+    - plant.tomater
+plant:
+  tomater:
+    sensors:
+      moisture: sensor.vatten_larm
+      brightness: sensor.plantlampa
+      temperature: sensor.temp1
+      battery: sensor.plantwatt
 switch:
   - platform: mqtt
     name: "Vattenpump"
@@ -51,3 +52,11 @@ switch:
     payload_off: "0"
     state_on: "1"
     state_off: "0"
+
+sensor:
+  - platform: mqtt
+    name: 'Temp-1'
+    state_topic: "/Monitor_Basement/T1/T"
+  - platform: mqtt
+    name: 'Temp-2'
+    state_topic: '/Monitor_Basement/T2/T'
