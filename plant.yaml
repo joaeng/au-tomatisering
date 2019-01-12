@@ -39,6 +39,8 @@ group:
       - automation.bevattning
       - automation.vaxtbelysning_pa
       - automation.vaxtbelysning_av
+      - automation.temperaturflakt
+      - automation.temperaturvarme
 
 
 plant:
@@ -164,13 +166,38 @@ automation:
 
   - alias: 'Temperatur-Fläkt'
     trigger:
-     - platform: time
-       seconds: 30
+      - platform: numeric_state
+        entity_id: sensor.temp1
+        below: 21
+      - platform: numeric_state
+        entity_id: sensor.temp1
+        above: 23
+
     action:
-      - service_template: ->
-           {% if ('states.sensor.temp1.state') > 23 %}
-           switch.turn_on
-           {% else %}
-           switch.turn_off
-           {% endif %}
+      service_template: ->
+       {% if trigger.above %}
+       switch.turn_on
+       {% else %}
+       switch.turn_off
+       {% endif %}
+      data:
         entity_id: switch.ventilation
+
+  - alias: 'Temperatur-Värme'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.temp1
+        below: 18
+      - platform: numeric_state
+        entity_id: sensor.temp1
+        above: 20
+
+    action:
+      service_template: ->
+       {% if trigger.below %}
+       switch.turn_on
+       {% else %}
+       switch.turn_off
+       {% endif %}
+      data:
+        entity_id: switch.varme
