@@ -1,3 +1,23 @@
+################################################################################
+# Plant package                                                                #
+#                                                                              #
+# Source: https://                                                             #
+#                                                                              #
+################################################################################
+
+
+################################################################################
+#                                                                          Div #
+################################################################################
+
+
+
+
+################################################################################
+#                                                                        Group #
+################################################################################
+
+
 group:
   odlingen:
     name: odlingen
@@ -9,11 +29,23 @@ group:
     - switch.ventilation
     #- binary_sensor.expriment_knapp
     - plant.tomater
+    - sensor.temp1
+    - sensor.temp2
+    - group.automatik
+  automatik:
+    name: Automatik
+    view: no
+    entities:
+      - automation.bevattning
+      - automation.vaxtbelysning_pa
+      - automation.vaxtbelysning_av
+
+
 plant:
   tomater:
     sensors:
       moisture: sensor.vatten_larm
-      brightness: sensor.plantlampa
+      brightness: sensor.tomatsol
       temperature: sensor.temp1
       battery: sensor.plantwatt
 ################################################################################
@@ -65,15 +97,80 @@ sensor:
   - platform: mqtt
     name: 'Temp-2'
     state_topic: '/Monitor_Basement/T2/T'
+  - platform: template
+    sensors:
+      tomatsol:
+          unit_of_measurement: '%'
+          value_template: >-
+            {% if is_state("switch.belysning","on") %}
+              100
+            {% else %}
+              0
+            {% endif %}
+
+
+
+
 ################################################################################
 #                                                                  Automations #
 ################################################################################
-Automations:
-  # Tänder Belysningen 06.00
-  - alias: Sunrise(Plant)
+
+automation:
+  - alias: 'Växtbelysning på'
     trigger:
      - platform: time
-       at: 06:00
+       at: '20:00:00'
     action:
        - service: switch.turn_on
          entity_id: switch.belysning
+       - service: notify.telegram_jocke
+         data:
+           message: 'Tänder belysningen'
+
+  - alias: 'Växtbelysning av'
+    trigger:
+     - platform: time
+       at: '20:05:00'
+    action:
+       - service: switch.turn_off
+         entity_id: switch.belysning
+       - service: notify.telegram_jocke
+         data:
+           message: 'Släcker Belysningen'
+
+  - alias: Bevattning
+    trigger:
+      platform: time
+      at: '11:00:00'
+    condition:
+      condition: time
+      weekday:
+        - mon
+        - wed
+        - fri
+
+    action:
+       - service: switch.turn_on
+         entity_id: switch.vattenpump
+       - service: notify.telegram_jocke
+         data:
+           message: 'Dagens Bevattning på börjad'
+       - delay: 00:05:00
+       - service: switch.turn_off
+         entity_id: switch.vattenpump
+       - service: notify.telegram_jocke
+         data:
+           message: 'Dagens Bevattning avslutad'
+
+  - alias: 'Temperatur-Fläkt'
+    trigger:
+     - platform: time
+       seconds: 30
+    action:
+      - service_template: ->
+           {% if ('states.sensor.temp1.state') > 23 %}
+           switch.turn_on
+           {% else %}
+           switch.turn_off
+           {% endif %}
+        entity_id: switch.ventilation
