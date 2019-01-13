@@ -13,6 +13,7 @@
 
 
 
+
 ################################################################################
 #                                                                        Group #
 ################################################################################
@@ -32,6 +33,7 @@ group:
     - sensor.temp1
     - sensor.temp2
     - group.automatik
+    
   automatik:
     name: Automatik
     view: no
@@ -106,7 +108,7 @@ sensor:
     name: 'Temp-2'
     state_topic: '/Monitor_Basement/T2/T'
     retain: true
-    
+
   - platform: template
     sensors:
       tomatsol:
