@@ -62,6 +62,7 @@ switch:
     payload_off: "0"
     state_on: "1"
     state_off: "0"
+    retain: true
 
   - platform: mqtt
     name: "Belysning"
@@ -71,6 +72,7 @@ switch:
     payload_off: "0"
     state_on: "1"
     state_off: "0"
+    retain: true
 
   - platform: mqtt
     name: "Värme"
@@ -80,6 +82,7 @@ switch:
     payload_off: "0"
     state_on: "1"
     state_off: "0"
+    retain: true
 
   - platform: mqtt
     name: "Ventilation"
@@ -89,6 +92,7 @@ switch:
     payload_off: "0"
     state_on: "1"
     state_off: "0"
+    retain: true
 ################################################################################
 #                                                                      sensors #
 ################################################################################
@@ -96,9 +100,13 @@ sensor:
   - platform: mqtt
     name: 'Temp-1'
     state_topic: "/Monitor_Basement/T1/T"
+    retain: true
+
   - platform: mqtt
     name: 'Temp-2'
     state_topic: '/Monitor_Basement/T2/T'
+    retain: true
+    
   - platform: template
     sensors:
       tomatsol:
@@ -196,4 +204,4 @@ automation:
     action:
       service_template: '{% if trigger.below %} switch.turn_on {% else %} switch.turn_off {% endif %}'
       data:
-        entity_id: switch.varme 
+        entity_id: switch.varme
